@@ -2,8 +2,6 @@
 namespace app\models;
 
 use Yii;
-use yii\base\Model;
-use app\components\Rules;
 use yii\db\ActiveRecord;
 
 class Passwods extends ActiveRecord
@@ -28,5 +26,15 @@ class Passwods extends ActiveRecord
     public function scenarios(){
         $scenarios[self::SCENARIO_INSERT] = ['password'];
         return $scenarios;
+    }
+
+    public function getHash($getPass){
+        $re = array();
+        $hash = Yii::$app->getSecurity()->generatePasswordHash($getPass);
+        $hashes = Passwods::find()->select('password')->where(['password' => $getPass])->all();
+        foreach($hashes as $val){
+            array_push($re, $val);
+        }
+        return $re;
     }
 }

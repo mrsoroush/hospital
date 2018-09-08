@@ -89,11 +89,18 @@ class UserController extends Controller
     }
 
     public function actionLogin(){
-        $logModel = new Users();
+        $logModel = new \app\models\Login();
         $logPassModel = new Passwods();
 
         $forms = Forms::find()->with('formfields')->all();
         $fields = $forms[1]->formfields;
+
+        if($logModel->load(Yii::$app->request->post()) && $logPassModel->load(Yii::$app->request->post())){
+            $users = $logModel->getUser($logModel->username);
+            $pass = Yii::$app->getSecurity()->validatePassword($logPassModel->password, $hash);
+            if ($pass) echo 'yes';
+        }
+
 
         return $this->render('login',[
             'fields' => $fields,

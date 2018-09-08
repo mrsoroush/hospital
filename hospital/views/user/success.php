@@ -1,6 +1,6 @@
 <?php
 
-$this->title = 'About';
+$this->title = 'Success';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

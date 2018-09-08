@@ -2,7 +2,6 @@
 namespace app\models;
 
 use Yii;
-use yii\base\Model;
 use app\components\Rules;
 use yii\db\TableSchema;
 use yii\db\ActiveRecord;
@@ -140,6 +139,9 @@ class Users extends ActiveRecord
         $scenarios[self::SCENARIO_INSERT] = $cols;
         return $scenarios;
     }
+
+
+
 
 
 }

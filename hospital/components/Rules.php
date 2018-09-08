@@ -26,7 +26,7 @@ class Rules extends ActiveRecord
 
         foreach($colName as $fh){
             foreach($fh as $n){
-                if($n !== NULL){             
+                if($n !== NULL){
                 array_push($parts, $n);
                 }
             }
