@@ -9,7 +9,7 @@ class Passwods extends ActiveRecord
     //public $password;
 
     public static function tableName(){
-        return '{{%passwods}}';
+        return '{{%Passwods}}';
     }
 
     public function getUsers(){
@@ -30,11 +30,16 @@ class Passwods extends ActiveRecord
 
     public function getHash($getPass){
         $re = array();
-        $hash = Yii::$app->getSecurity()->generatePasswordHash($getPass);
-        $hashes = Passwods::find()->select('password')->where(['password' => $getPass])->all();
+        //$ids = array();
+        $userId = Users::find()->select('id')->where(['username' => $getPass])->all();
+        foreach($userId as $val){
+                $ids = $val;
+        }
+        $hashes = Passwods::find()->select('password')->where(['id' => $ids])->all();
         foreach($hashes as $val){
             array_push($re, $val);
         }
-        return $re;
+      
+        return $re[0];
     }
 }
