@@ -11,6 +11,7 @@ use app\models\Formattrs;
 use app\components\Crud;
 use \app\models\Users;
 use \app\models\passwods;
+use \app\models\Login;
 
 
 class UserController extends Controller
@@ -73,6 +74,7 @@ class UserController extends Controller
             }
             Yii::$app->session->setFlash ( 'success', 'Model has been saved' );
             $this->redirect(['success']);
+            //echo $hash;
         }
         
         
@@ -88,8 +90,12 @@ class UserController extends Controller
         return $this->render('success');
     }
 
+    public function actionWelcome(){
+        return $this->render('welcome');
+    }
+
     public function actionLogin(){
-        $logModel = new \app\models\Login;
+        $logModel = new Login;
         $logPassModel = new Passwods;
 
         $forms = Forms::find()->with('formfields')->all();
@@ -100,10 +106,18 @@ class UserController extends Controller
             $hash = $logPassModel->getHash($logModel->username);
             $formPass = $_POST['Passwods']['password'];
             
-            //var_dump($hash);
             foreach($hash as $val){
-                $pass = Yii::$app->getSecurity()->validatePassword($formPass, $val);
-                    if ($pass) echo 'yes';
+                if($val != NULL){
+                    $pass = Yii::$app->getSecurity()->validatePassword($formPass, trim($val));
+                        if ($pass){
+                            $logDate = new Crud;
+                            $logModel->last_login = $logDate->getDate();
+                            $logModel->scenario = Users::SCENARIO_UPDATE;
+                            $logModel->update();
+
+                            //$this->redirect(['welcome']);
+                        }
+                }
             }
         }
 

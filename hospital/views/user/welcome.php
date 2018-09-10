@@ -1,10 +1,11 @@
 <?php
 
-$this->title = 'Success';
+$this->title = 'Welcome';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div>
-Congratulation! Your registration is successful!!
+Login is successful!
+Welcome to site!!
 </div>
 <br>

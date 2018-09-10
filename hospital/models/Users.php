@@ -132,11 +132,13 @@ class Users extends ActiveRecord
     }
 
     CONST SCENARIO_INSERT = 'insert';
+    CONST SCENARIO_UPDATE = 'update';
     public function scenarios(){
         ///$scenarios = parrent::scenarios;
         $insRule = new Rules();
         $cols = $insRule->getAllcols(1);
         $scenarios[self::SCENARIO_INSERT] = $cols;
+        $scenarios[self::SCENARIO_UPDATE] = ['last_login'];
         return $scenarios;
     }
 
