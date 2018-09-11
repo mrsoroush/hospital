@@ -5,9 +5,11 @@ use Yii;
 use app\components\Rules;
 use yii\db\TableSchema;
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+use app\components\Crud;
 
 
-class Users extends ActiveRecord
+class Users extends ActiveRecord implements IdentityInterface
 {
     //@fields
 
@@ -121,28 +123,57 @@ class Users extends ActiveRecord
         $thisRule = new Rules();
         $cols = $thisRule->getCols(1);
         $rule = $thisRule->getRules(1);
-
         $result = array();
-
         for($i=0; $i<count($cols); $i++){
             array_push($result, [$cols[$i],$rule[$i]]);
         }
-
         return $result;
     }
 
     CONST SCENARIO_INSERT = 'insert';
-    CONST SCENARIO_UPDATE = 'update';
     public function scenarios(){
-        ///$scenarios = parrent::scenarios;
+        $scenarios = parent::scenarios();
         $insRule = new Rules();
         $cols = $insRule->getAllcols(1);
         $scenarios[self::SCENARIO_INSERT] = $cols;
-        $scenarios[self::SCENARIO_UPDATE] = ['last_login'];
         return $scenarios;
     }
 
 
+    public static function findIdentity($id){
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null){
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+
+    public function getAuthKey(){
+        return $this->authKey;
+    }
+
+    public function validateAuthKey($authKey){
+        return $this->getAuthKey() === $authKey;
+    }
+
+    public function beforeSave($insert){
+        if (parent::beforeSave($insert)){
+            if ($this->isNewRecord){
+                $this->authKey = \Yii::$app->security->generateRandomString();
+                $crud = new Crud();
+                $this->register_date = $crud->getDate();
+                $rr = $crud->isDefault();
+                $this->role = $rr[0];
+                $this->activation = 0;
+            }
+            return true;
+        }
+        return false;
+    }
 
 
 

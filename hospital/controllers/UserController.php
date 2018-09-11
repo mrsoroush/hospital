@@ -59,13 +59,8 @@ class UserController extends Controller
         $modelpass->scenario = Passwods::SCENARIO_INSERT;
         if($model->load(Yii::$app->request->post()) && $modelpass->load(Yii::$app->request->post())){
             $crud = new Crud();
-            $model->register_date = $crud->getDate();
-            $rr = $crud->isDefault();
-            $model->role = $rr[0];
-            $model->activation = 0;
-            $hash = Yii::$app->getSecurity()->generatePasswordHash($modelpass->password);
+            $hash = $crud->hashingPass($modelpass->password);
             $modelpass->password = $hash;
-            $modelpass->create_on = $crud->getDate();
             $isValid = $model->validate();
             $isValid = $modelpass->validate() && $isValid;
             if($isValid){
@@ -112,10 +107,12 @@ class UserController extends Controller
                         if ($pass){
                             $logDate = new Crud;
                             $logModel->last_login = $logDate->getDate();
-                            $logModel->scenario = Users::SCENARIO_UPDATE;
-                            $logModel->update();
+                            Yii::$app->db->createCommand()
+                            ->update('{{users}}', ['[[last_login]]' => $logModel->last_login],
+                            ['[[username]]' => $logModel->username])
+                            ->execute();
 
-                            //$this->redirect(['welcome']);
+                            $this->redirect(['welcome']);
                         }
                 }
             }

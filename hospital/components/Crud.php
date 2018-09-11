@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use Yii;
 use yii\db\ActiveRecord;
 use app\models\Roles;
 
@@ -25,6 +26,11 @@ class Crud extends ActiveRecord
         foreach($role as $val)
             array_push($ref, $val);
         return $ref;
+    }
+
+    public function hashingPass($entryPass){
+        $hash = Yii::$app->getSecurity()->generatePasswordHash($entryPass);
+        return $hash;
     }
 
 }

@@ -3,6 +3,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use app\components\Crud;
 
 class Passwods extends ActiveRecord
 {
@@ -39,7 +40,17 @@ class Passwods extends ActiveRecord
         foreach($hashes as $val){
             array_push($re, $val);
         }
-      
         return $re[0];
+    }
+
+    public function beforeSave($insert){
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $crud = new Crud();
+                $this->create_on = $crud->getDate();
+            }
+            return true;
+        }
+        return false;
     }
 }

@@ -17,13 +17,10 @@ class Login extends ActiveRecord
         $thisRule = new Rules();
         $cols = $thisRule->getCols(2);
         $rule = $thisRule->getRules(2);
-
         $result = array();
-
         for($i=0; $i<count($cols); $i++){
             array_push($result, [$cols[$i],$rule[$i]]);
         }
-
         return $result;
     }
 
