@@ -145,7 +145,7 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     public static function findIdentityByAccessToken($token, $type = null){
-        return static::findOne(['access_token' => $token]);
+        throw new \yii\base\NotSupportedException();
     }
 
     public function getId(){
@@ -158,6 +158,10 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function validateAuthKey($authKey){
         return $this->getAuthKey() === $authKey;
+    }
+
+    public static function findByUsername($username){
+        return self::findOne(['username' => $username]);
     }
 
     public function beforeSave($insert){
@@ -175,6 +179,6 @@ class Users extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-
+    
 
 }

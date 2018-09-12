@@ -31,15 +31,16 @@ class Passwods extends ActiveRecord
 
     public function getHash($getPass){
         $re = array();
-        //$ids = array();
         $userId = Users::find()->select('id')->where(['username' => $getPass])->all();
         foreach($userId as $val){
                 $ids = $val;
         }
+
         $hashes = Passwods::find()->select('password')->where(['id' => $ids])->all();
         foreach($hashes as $val){
             array_push($re, $val);
         }
+
         return $re[0];
     }
 

@@ -22,7 +22,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\Users',
             'enableAutoLogin' => true,
-            'loginUrl' => ['user/login'],
+            'enableSession' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

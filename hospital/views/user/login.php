@@ -1,12 +1,19 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 
-$form = ActiveForm::begin();
+ $form = ActiveForm::begin([
+    'id' => 'login-form',
+    'layout' => 'horizontal',
+    'fieldConfig' => [
+        'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
+        'labelOptions' => ['class' => 'col-lg-1 control-label'],
+    ],
+]);
 
 foreach($fields as $val){
     if($val->fieldname == 'password'){
@@ -22,6 +29,10 @@ foreach($fields as $val){
 }
 
 ?>
+
+<?= $form->field($logModel, 'rememberMe')->checkbox([
+            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+]) ?>
 
 <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
 

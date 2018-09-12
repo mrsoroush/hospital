@@ -90,6 +90,10 @@ class UserController extends Controller
     }
 
     public function actionLogin(){
+        if(!\Yii::$app->user->isGuest){
+            return $this->goHome();
+        }
+
         $logModel = new Login;
         $logPassModel = new Passwods;
 
@@ -97,7 +101,7 @@ class UserController extends Controller
         $fields = $forms[1]->formfields;
 
         if($logModel->load(Yii::$app->request->post()) && $logPassModel->load(Yii::$app->request->post())){
-            $users = $logModel->getUser($logModel->username);
+            $users = $logModel->getUsers($logModel->username);
             $hash = $logPassModel->getHash($logModel->username);
             $formPass = $_POST['Passwods']['password'];
             
@@ -105,6 +109,7 @@ class UserController extends Controller
                 if($val != NULL){
                     $pass = Yii::$app->getSecurity()->validatePassword($formPass, trim($val));
                         if ($pass){
+                            $logModel->login();
                             $logDate = new Crud;
                             $logModel->last_login = $logDate->getDate();
                             Yii::$app->db->createCommand()
@@ -113,7 +118,9 @@ class UserController extends Controller
                             ->execute();
 
                             $this->redirect(['welcome']);
-                        }
+                       } else {
+                           echo "Password is wrong.";
+                       }
                 }
             }
         }

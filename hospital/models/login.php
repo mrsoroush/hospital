@@ -9,6 +9,9 @@ use app\models\Users;
 
 class Login extends ActiveRecord
 {
+    public $rememberMe = true;
+    private $_user = false;
+
     public static function tableName(){
         return '{{%Users}}';
     }
@@ -24,7 +27,7 @@ class Login extends ActiveRecord
         return $result;
     }
 
-    public function getUser($passUser){
+    public function getUsers($passUser){
         $users = array();
         $user = Users::find()->select('username')->where(['username' => $passUser])->all();
         foreach($user as $val){
@@ -32,6 +35,23 @@ class Login extends ActiveRecord
         }
         return $users;
     }
+
+    public function getUser(){
+        if ($this->_user === false) {
+            $this->_user = Users::findByUsername($this->username);
+        }
+        return $this->_user;
+    }
+
+    public function login(){
+       //if ($this->validate()) {
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+    //}
+        return false;
+    }
+
+
+
 
 
 
