@@ -93,44 +93,36 @@ class UserController extends Controller
         if(!\Yii::$app->user->isGuest){
             return $this->goHome();
         }
-
         $logModel = new Login;
         $logPassModel = new Passwods;
-
         $forms = Forms::find()->with('formfields')->all();
         $fields = $forms[1]->formfields;
-
         if($logModel->load(Yii::$app->request->post()) && $logPassModel->load(Yii::$app->request->post())){
-            $users = $logModel->getUsers($logModel->username);
             $hash = $logPassModel->getHash($logModel->username);
             $formPass = $_POST['Passwods']['password'];
-            
-            foreach($hash as $val){
-                if($val != NULL){
-                    $pass = Yii::$app->getSecurity()->validatePassword($formPass, trim($val));
-                        if ($pass){
-                            $logModel->login();
-                            $logDate = new Crud;
-                            $logModel->last_login = $logDate->getDate();
-                            Yii::$app->db->createCommand()
-                            ->update('{{users}}', ['[[last_login]]' => $logModel->last_login],
-                            ['[[username]]' => $logModel->username])
-                            ->execute();
-
-                            $this->redirect(['welcome']);
-                       } else {
-                           echo "Password is wrong.";
-                       }
+            if($hash){
+                foreach($hash as $val){
+                    if($val != NULL){
+                        $pass = $logPassModel->validatePass($formPass, $val);
+                            if ($pass){
+                                $logModel->login();
+                                $logDate = new Crud;
+                                $logModel->last_login = $logDate->getDate();
+                                $logModel->updateLastlogin($logModel->last_login, $logModel->username);
+                                $this->redirect(['welcome']);
+                        } else {
+                            echo "Password is wrong.";
+                        }
+                    }
                 }
+            } else {
+                echo "Username or password is wrong";
             }
         }
-
-
         return $this->render('login',[
             'fields' => $fields,
             'logModel' => $logModel,
             'pass' => $logPassModel,
         ]);
     }
-
 }

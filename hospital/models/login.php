@@ -50,7 +50,13 @@ class Login extends ActiveRecord
         return false;
     }
 
-
+    public function updateLastlogin($date, $username){
+        Yii::$app->db->createCommand()
+            ->update('{{users}}', ['[[last_login]]' => $date],
+            ['[[username]]' => $username])
+            ->execute();
+        return true;
+    }
 
 
 

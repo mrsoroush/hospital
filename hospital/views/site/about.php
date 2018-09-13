@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+
 echo  $a . '<hr>';
 
 $v = new Rules();
@@ -45,5 +46,4 @@ echo '<hr>';
 for($i=0;$i<=count($s)-1;$i++){
     echo '['. $s[$i]. ','. $t[$i] . ']';
 }
-
 ?>

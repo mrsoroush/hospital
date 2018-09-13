@@ -32,15 +32,17 @@ class Passwods extends ActiveRecord
     public function getHash($getPass){
         $re = array();
         $userId = Users::find()->select('id')->where(['username' => $getPass])->all();
-        foreach($userId as $val){
-                $ids = $val;
+        if($userId != NULL){
+            foreach($userId as $val){
+                    $ids = $val;
+            }
+            $hashes = Passwods::find()->select('password')->where(['id' => $ids])->all();
+            foreach($hashes as $val){
+                array_push($re, $val);
+            }
+        } else {
+            return false;
         }
-
-        $hashes = Passwods::find()->select('password')->where(['id' => $ids])->all();
-        foreach($hashes as $val){
-            array_push($re, $val);
-        }
-
         return $re[0];
     }
 
@@ -53,5 +55,10 @@ class Passwods extends ActiveRecord
             return true;
         }
         return false;
+    }
+
+    public function validatePass($password, $hash){
+        $pass = Yii::$app->getSecurity()->validatePassword($password, trim($hash));
+        return $pass;
     }
 }
