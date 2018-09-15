@@ -113,3 +113,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.alertMessage {
+    color: #c55;
+    background: #ffe0df;
+    padding:10px;
+    text-align: center;
+    border: 1px solid #c55;
+    margin:15px;
+}

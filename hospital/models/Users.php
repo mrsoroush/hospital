@@ -119,7 +119,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     //@end relations
 
-    public function rules(){
+    /*public function rules(){
         $thisRule = new Rules();
         $cols = $thisRule->getCols(1);
         $rule = $thisRule->getRules(1);
@@ -128,6 +128,25 @@ class Users extends ActiveRecord implements IdentityInterface
             array_push($result, [$cols[$i],$rule[$i]]);
         }
         return $result;
+    }*/
+
+    public function rules(){
+        return [
+            ['username' , 'required'],
+            ['username' , 'string' , 'min' => 6, 'max' => 20],
+            ['username' , 'unique',
+            'targetAttribute' => 'username',
+            'targetClass' => self::class,
+            'message' => 'This username can not be taken.',
+            'when' => 'checkUnique'],
+            ['email' , 'required'],
+            ['email' , 'email'],
+            ['mobile' , 'required']
+        ];
+    }
+
+    public function checkUnique(){
+        
     }
 
     CONST SCENARIO_INSERT = 'insert';

@@ -5,6 +5,7 @@ namespace app\components;
 use Yii;
 use yii\db\ActiveRecord;
 use app\models\Roles;
+use yii\bootstrap\Modal;
 
 class Crud extends ActiveRecord
 {
@@ -31,6 +32,10 @@ class Crud extends ActiveRecord
     public function hashingPass($entryPass){
         $hash = Yii::$app->getSecurity()->generatePasswordHash($entryPass);
         return $hash;
+    }
+
+    public function message($message){
+        return "<div class='alertMessage'>" . $message ."</div>";
     }
 
 }

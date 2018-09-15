@@ -67,9 +67,9 @@ class UserController extends Controller
                 $crud->Insertdata($model);
                 $crud->Insertdata($modelpass);
             }
+           
             Yii::$app->session->setFlash ( 'success', 'Model has been saved' );
             $this->redirect(['success']);
-            //echo $hash;
         }
         
         
@@ -90,6 +90,7 @@ class UserController extends Controller
     }
 
     public function actionLogin(){
+        $message = '';
         if(!\Yii::$app->user->isGuest){
             return $this->goHome();
         }
@@ -111,18 +112,20 @@ class UserController extends Controller
                                 $logModel->updateLastlogin($logModel->last_login, $logModel->username);
                                 $this->redirect(['welcome']);
                         } else {
-                            echo "Password is wrong.";
+                            $message = 'Username or password is wrong';
                         }
                     }
                 }
             } else {
-                echo "Username or password is wrong";
+                $message = 'Username or password is wrong';
             }
         }
-        return $this->render('login',[
-            'fields' => $fields,
-            'logModel' => $logModel,
-            'pass' => $logPassModel,
-        ]);
+
+            return $this->render('login',[
+                'fields' => $fields,
+                'logModel' => $logModel,
+                'pass' => $logPassModel,
+                'message' => $message,
+            ]);
     }
 }
