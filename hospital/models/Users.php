@@ -97,6 +97,8 @@ class Users extends ActiveRecord implements IdentityInterface
 
     //@end fields
 
+    public $verifyCode;
+
 
     public static function tableName(){
         return '{{%Users}}';
@@ -132,21 +134,19 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function rules(){
         return [
-            ['username' , 'required'],
+            [['username', 'email', 'mobile'] , 'required'],
             ['username' , 'string' , 'min' => 6, 'max' => 20],
-            ['username' , 'unique',
-            'targetAttribute' => 'username',
-            'targetClass' => self::class,
-            'message' => 'This username can not be taken.',
-            'when' => 'checkUnique'],
-            ['email' , 'required'],
+            ['username' , 'match' , 'pattern' => '/^[a-z]\w*$/i'],
             ['email' , 'email'],
-            ['mobile' , 'required']
+            ['email' , 'unique',
+            'targetAttribute' => 'email',
+            'targetClass' => self::class],
+            ['mobile', 'match', 'pattern' => '/(\+98|0)?9\d{9}/'],
+            ['mobile' , 'unique',
+            'targetAttribute' => 'mobile',
+            'targetClass' => self::class],
+            ['verifyCode' , 'captcha'], 
         ];
-    }
-
-    public function checkUnique(){
-        
     }
 
     CONST SCENARIO_INSERT = 'insert';

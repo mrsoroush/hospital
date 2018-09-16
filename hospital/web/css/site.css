@@ -122,3 +122,11 @@ a.desc:after {
     border: 1px solid #c55;
     margin:15px;
 }
+
+#refresh-captcha
+{
+
+    width:32px;
+    height:32px;
+    cursor: pointer;
+}

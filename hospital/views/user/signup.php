@@ -4,13 +4,16 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\jui\DatePicker;
+use yii\captcha\Captcha;
 
 $this->title = 'SignUp';
 $this->params['breadcrumbs'][] = $this->title;
 
 //var_dump($pass);
 
-    $form = ActiveForm::begin();
+    $form = ActiveForm::begin([
+        'enableAjaxValidation' => true
+    ]);
 
 
    foreach($fields as $vals){
@@ -35,16 +38,24 @@ $this->params['breadcrumbs'][] = $this->title;
             echo $form->field($model, $vals->fieldname)->widget(\yii\jui\DatePicker::class, [
                 'dateFormat' => 'yyyy-MM-dd',
             ]);
+        } elseif($vals->type == 'captcha'){
+            echo $form->field($model, $vals->fieldname)->widget(Captcha::className(), [
+                'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
+                'imageOptions' => ['id' => 'signup-captcha'],
+            ])
+            ->label($vals->label);
+?>
+            <?= Html::img('/images/refresh1.png', ['id' => 'refresh-captcha', 'alt' => 'refresh-captcha']) ?>           
+<?php
         }
     }
 ?>
-
-
+<br>
 <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+<?= Html::resetButton('Reset', ['class' => 'btn btn-primary', 'name' => 'reset-button']) ?>
 
 <?php
-    ActiveForm::end();    
-
+    ActiveForm::end();
 ?>
 
 

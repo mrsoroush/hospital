@@ -12,6 +12,8 @@ use app\components\Crud;
 use \app\models\Users;
 use \app\models\passwods;
 use \app\models\Login;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 
 class UserController extends Controller
@@ -53,6 +55,11 @@ class UserController extends Controller
             if($val->type == 'radio'){
                 $attrs = Formattrs::find()->where(['formfields_id' => $val->id])->all();
             }
+        }
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
         $model->scenario = Users::SCENARIO_INSERT;
