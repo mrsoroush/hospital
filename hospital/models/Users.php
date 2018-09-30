@@ -97,9 +97,6 @@ class Users extends ActiveRecord implements IdentityInterface
 
     //@end fields
 
-    public $verifyCode;
-
-
     public static function tableName(){
         return '{{%Users}}';
     }
@@ -145,7 +142,6 @@ class Users extends ActiveRecord implements IdentityInterface
             ['mobile' , 'unique',
             'targetAttribute' => 'mobile',
             'targetClass' => self::class],
-            ['verifyCode' , 'captcha'], 
         ];
     }
 
@@ -192,6 +188,10 @@ class Users extends ActiveRecord implements IdentityInterface
                 $rr = $crud->isDefault();
                 $this->role = $rr[0];
                 $this->activation = 0;
+
+                /*$auth = \Yii::$app->authManager;
+                $authorRole = $auth->getRole('registered user');
+                $auth->assign($authorRole, $user->getId());*/
             }
             return true;
         }

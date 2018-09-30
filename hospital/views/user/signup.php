@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dateFormat' => 'yyyy-MM-dd',
             ]);
         } elseif($vals->type == 'captcha'){
-            echo $form->field($model, $vals->fieldname)->widget(Captcha::className(), [
+            echo $form->field($modelcaptcha, $vals->fieldname)->widget(Captcha::className(), [
                 'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
                 'imageOptions' => ['id' => 'signup-captcha'],
             ])

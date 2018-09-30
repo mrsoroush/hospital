@@ -12,6 +12,7 @@ use app\components\Crud;
 use \app\models\Users;
 use \app\models\passwods;
 use \app\models\Login;
+use \app\models\Captchas;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -45,6 +46,7 @@ class UserController extends Controller
     public function actionSignup(){
         $model = new Users;
         $modelpass = new Passwods;
+        $modelcaptcha = new Captchas;
         /*$forms = Forms::find()->with(['formfields' => function($query){
             $query->select('id, forms_id, fieldname, type, label, rules, hint');
         }])->all();*/
@@ -57,14 +59,16 @@ class UserController extends Controller
             }
         }
 
-        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())){
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
+            return $isVali = ActiveForm::validate($model);
+            $model->save(false);
+            $modelpass->save(false);
         }
 
         $model->scenario = Users::SCENARIO_INSERT;
         $modelpass->scenario = Passwods::SCENARIO_INSERT;
-        if($model->load(Yii::$app->request->post()) && $modelpass->load(Yii::$app->request->post())){
+        if($modelpass->load(Yii::$app->request->post()) && $model->load(Yii::$app->request->post())){
             $crud = new Crud();
             $hash = $crud->hashingPass($modelpass->password);
             $modelpass->password = $hash;
@@ -73,10 +77,11 @@ class UserController extends Controller
             if($isValid){
                 $crud->Insertdata($model);
                 $crud->Insertdata($modelpass);
-            }
-           
-            Yii::$app->session->setFlash ( 'success', 'Model has been saved' );
-            $this->redirect(['success']);
+                Yii::$app->session->setFlash ( 'success', 'Model has been saved' );
+                $this->redirect(['success']);
+            } else {
+                echo "Something wrong ...";
+            } 
         }
         
         
@@ -85,6 +90,7 @@ class UserController extends Controller
             'model' => $model,
             'modelpass' => $modelpass,
             'attrs' => $attrs,
+            'modelcaptcha' => $modelcaptcha,
             ]);
     }
 
